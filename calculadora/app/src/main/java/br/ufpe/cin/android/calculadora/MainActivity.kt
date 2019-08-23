@@ -10,12 +10,16 @@ import java.lang.Exception
 
 class MainActivity : AppCompatActivity() {
 
+    private var equation: String = ""
+    private var result: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-
+        /**
+         *  Faz a leitura de para botão
+         * */
         btn_9.setOnClickListener{
             text_calc.setText(text_calc.text.toString() + btn_9.text.toString())
         }
@@ -88,17 +92,22 @@ class MainActivity : AppCompatActivity() {
             text_calc.setText(text_calc.text.toString() + btn_Power.text.toString())
         }
 
-
+        /**
+         * Implementacao do botao clear
+        * */
         btn_Clear.setOnClickListener {
             text_calc.text.clear()          //limpa a seção EditText
             text_info.text = ""         //limpa a seção TextView
         }
 
 
+        /**
+         * Implementacao do botao Equal
+         */
         btn_Equal.setOnClickListener {
-            var result: Double = 0.0
+            var result: Double
 
-
+            //  Analisa se a  expressao regular em text_cal eh uma operacao valida
             try {
                 result = eval(text_calc.text.toString())
                 text_info.text = result.toString()
@@ -107,7 +116,6 @@ class MainActivity : AppCompatActivity() {
 
                 Toast.makeText(applicationContext, msg, Toast.LENGTH_SHORT).show()
                 text_info.text = ""
-                //return@setOnClickListener
             }
 
             text_calc.text.clear()
@@ -116,6 +124,26 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+    /**
+     * Salva o status dos campos text_calc e text_info ao girar a o divice
+     */
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+
+        outState.putString("equation", text_calc.text.toString())
+        outState.putString("result", text_info.text.toString())
+    }
+
+    /**
+     * Restaura o status dos campos text_calc e text_info ao girar a o divice
+     */
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
+
+        text_calc.setText(savedInstanceState.getString("equation"))
+        text_info.text = savedInstanceState.getString("result")
+
+    }
 
     //Como usar a função:
     // eval("2+2") == 4.0
